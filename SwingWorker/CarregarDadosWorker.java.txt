@@ -1,0 +1,44 @@
+import javax.swing.*;
+import java.util.List;
+
+// SwingWorker<TipoDoRetornoFinal, TipoDoProgressoParcial>
+public class CarregarDadosWorker extends SwingWorker<String, Integer> {
+
+    private final JLabel statusLabel;
+    private final JProgressBar barra;
+
+    public CarregarDadosWorker(JLabel statusLabel, JProgressBar barra) {
+        this.statusLabel = statusLabel;
+        this.barra = barra;
+    }
+
+    @Override
+    protected String doInBackground() throws Exception {
+        // Simulando uma tarefa pesada (ex: busca no banco)
+        for (int i = 1; i <= 10; i++) {
+            Thread.sleep(500); // Pausa de meio segundo
+            publish(i * 10);   // Envia o progresso para o método process()
+        }
+        return "Processamento Concluído com Sucesso!";
+    }
+
+    @Override
+    protected void process(List<Integer> chunks) {
+        // Este método roda na EDT, então pode mexer na interface
+        int ultimoValor = chunks.get(chunks.size() - 1);
+        barra.setValue(ultimoValor);
+        statusLabel.setText("Carregando: " + ultimoValor + "%");
+    }
+
+    @Override
+    protected void done() {
+        try {
+            // Pega o que foi retornado no doInBackground
+            String mensagem = get(); 
+            statusLabel.setText(mensagem);
+            JOptionPane.showMessageDialog(null, "Tarefa finalizada!");
+        } catch (Exception e) {
+            statusLabel.setText("Erro ao processar.");
+        }
+    }
+}

@@ -1,0 +1,29 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class AppBackground {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        JLabel label = new JLabel("Aguardando...");
+        JButton button = new JButton("Iniciar Tarefa");
+
+        button.addActionListener(e -> {
+            // Cria uma nova thread para não travar a UI
+            new Thread(() -> {
+                try {
+                    Thread.sleep(3000); // Simula trabalho demorado
+                } catch (InterruptedException ex) {}
+
+                // ATUALIZAÇÃO SEGURA: Volta para a EDT
+                SwingUtilities.invokeLater(() -> {
+                    label.setText("Tarefa Concluída!");
+                });
+            }).start();
+        });
+
+        frame.add(label); frame.add(button);
+        frame.setSize(200,100);
+        frame.setVisible(true);
+    }
+}

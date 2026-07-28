@@ -1,0 +1,19 @@
+import javax.swing.*;
+
+public class ExemploSwing {
+    public static void main(String[] args) {
+        // Enfileira a criação da GUI na EDT
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+    }
+
+    private static void createAndShowGUI() {
+        JFrame frame = new JFrame("Exemplo Swing");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 200);
+        frame.setVisible(true);
+    }
+}
